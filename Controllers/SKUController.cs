@@ -6,7 +6,7 @@ using TexCode.Services;
 namespace TexCode.Controllers
 {
     [ApiController]
-    [Route("api/skus")]
+    [Route("api/[controller]")]
     public class SKUController : BaseController
     {
         private readonly SKUService _skuService;

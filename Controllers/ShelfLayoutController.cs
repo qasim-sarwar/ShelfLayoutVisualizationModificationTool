@@ -7,7 +7,7 @@ using TexCode.Authorization;
 namespace TexCode.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ShelfLayoutController : BaseController
     {
         private IShelfLayoutService _shelfLayoutService;

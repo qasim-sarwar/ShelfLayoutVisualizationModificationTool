@@ -65,3 +65,55 @@ Change the HTTP method to GET with the dropdown selector on the left of the URL 
 In the URL field enter the address to the user's route of your local API - http://localhost:port/users.
 Select the Authorization tab below the URL field, set the Type selector to Bearer Token, and paste the JWT token from the previous authenticate step into the Token field.
 Click the Send button, you should receive a "200 OK" response containing a JSON array with all the user records in the system (just the one test user in the example).
+
+
+=================================================================================================================================
+Question: What were your challenges in implementing this project?
+
+Answer: The project implementation had some challenges, particularly related to Entity Framework Core and database interactions. However, these were addressed successfully through careful design and testing.
+Question: How did you handle exceptions and edge cases in your code?
+
+Answer: I handled exceptions and edge cases by using proper error handling techniques, such as try-catch blocks, and also by validating user input. This ensures that the application gracefully handles unexpected scenarios.
+Question: What is the significance of using AutoMapper in this project?
+
+Answer: AutoMapper is used to efficiently map between data transfer objects (DTOs) and domain entities. This helps reduce boilerplate code and ensures clean separation between the presentation layer and the data access layer.
+Question: Could you explain your decision to use an in-memory database for testing?
+
+Answer: Using an in-memory database is a lightweight and efficient way to perform unit tests on database-related functionality without affecting the actual database. It allows for isolation and reproducibility of tests.
+Question: How do you ensure data integrity and validation in the project?
+
+Answer: Data integrity and validation are ensured through a combination of data annotations in the model classes and explicit validation checks in the services. This helps prevent invalid data from entering the database.
+Question: How do you manage dependency injection in the project?
+
+Answer: Dependency injection is managed using the built-in dependency injection container provided by ASP.NET Core. This ensures that services and dependencies are injected into the application components, promoting modularity and testability.
+Question: Could you elaborate on your approach to handling JWT tokens for authentication?
+
+Answer: JWT tokens are used for user authentication. I generate tokens with a defined expiration time and verify them when required. This provides a secure way to authenticate and authorize users.
+Question: How do you handle password hashing in user authentication?
+
+Answer: Passwords are securely hashed before storing them in the database. This enhances security and ensures that plaintext passwords are not exposed.
+Question: Explain how you manage email notifications and user communication.
+
+Answer: I use an email service to send notifications to users, such as password reset emails. The service composes and sends email messages with appropriate content and links.
+Question: What measures have you taken to prevent duplicate data and key violations in the database?
+
+Answer: I've used checks within the code to prevent duplicate data. For example, when registering a new account, I check if an account with the same email already exists in the database. This helps avoid key violations and ensures data integrity.
+Technical Decisions or Requirements:
+
+The project relies on Entity Framework Core and an in-memory database for testing, which simplifies database operations during development and testing phases.
+
+AutoMapper is used to streamline the mapping between domain entities and DTOs, making the codebase more maintainable and reducing redundancy.
+
+The use of JWT tokens for authentication provides a secure means of authenticating users.
+
+The code includes robust error handling and validation to handle exceptions and ensure data integrity.
+
+Dependency injection is utilized throughout the project to promote modularity and testability.
+
+Breakdown of Time Spent on Tasks:
+
+Reading Documents: 30 minutes
+Implementing and Running Tests: 4 hours
+Implementation and debugging: 10 hours (2 hours daily after work)
+Refactoring: 2 hours
+This breakdown of time spent on tasks reflects a structured approach to development, including initial research, testing, implementation, and optimization. The allocation of time to each task ensures a methodical and efficient workflow.
