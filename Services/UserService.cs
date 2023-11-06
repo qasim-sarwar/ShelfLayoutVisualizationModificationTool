@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.Text;
 using TexCode.DatabaseContext;
 using TexCode.Entities;
@@ -16,12 +15,13 @@ namespace TexCode.Services
     public interface IUserService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model);
-        IEnumerable<User> GetAll();
-        User GetById(int id);
+        IEnumerable<Account> GetAll();
+        Account GetById(int id);
         void Register(RegisterRequest model);
         AccountResponse Update(int id, UpdateRequest model);
         void Delete(int id);
         void ForgotPassword(ForgotPasswordRequest model, string origin);
+
     }
 
     public class UserService : IUserService
@@ -39,14 +39,32 @@ namespace TexCode.Services
         }
 
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
-    {
-        new User { Id = 1, FirstName = "qasim", LastName = "sarwar", Username = "qasim", Password = "sarwar" },
-        new User { Id = 2, FirstName = "donald", LastName = "trump", Username = "donald", Password = "trump" }
-    };
+        public void InitializeUserAccounts()
+        {
+            var users = new List<User>
+        {
+            new User { Id = 1, FirstName = "qasim", LastName = "sarwar", Username = "qasim", Password = "sarwar" },
+            new User { Id = 2, FirstName = "donald", LastName = "trump", Username = "donald", Password = "trump" }
+        };
+
+            foreach (var user in users)
+            {
+                var account = _mapper.Map<Account>(user);
+                if (!_context.Accounts.Any(x => x.Username == user.Username))
+                {
+                    // Add each user to the context's Accounts DbSet
+                    _context.Accounts.Add(account);
+                    // Save changes to persist the users in the database
+                    _context.SaveChanges();
+                }
+            }
+        }
+
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+            var authUser = _context.Accounts.SingleOrDefault(x => x.Username == model.Username);
+
+            var user = _mapper.Map<User>(model);
 
             // return null if user not found
             if (user == null) return null!;
@@ -56,9 +74,10 @@ namespace TexCode.Services
 
             return new AuthenticateResponse(user, token);
         }
-        public IEnumerable<User> GetAll()
+        public IEnumerable<Account> GetAll()
         {
-            return _users;
+            InitializeUserAccounts();
+            return _context.Accounts;
         }
         private Account getAccount(int id)
         {
@@ -66,9 +85,10 @@ namespace TexCode.Services
             if (account == null) throw new KeyNotFoundException("Account not found");
             return account;
         }
-        public User GetById(int id)
+        public Account GetById(int id)
         {
-            return _users.FirstOrDefault(x => x.Id == id);
+            InitializeUserAccounts();
+            return _context.Accounts.FirstOrDefault(x => x.Id == id);
         }
         public void Register(RegisterRequest model)
         {
@@ -87,7 +107,7 @@ namespace TexCode.Services
             account.Created = DateTime.UtcNow;
             account.VerificationToken = generateVerificationToken();
 
-            //// hash password
+            // hash password
             //account.PasswordHash = BCrypt.HashPassword(model.Password);
 
             // save account

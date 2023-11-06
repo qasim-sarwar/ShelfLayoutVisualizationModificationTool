@@ -5,7 +5,6 @@ using TexCode.Authorization;
 
 namespace TexCode.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : BaseController
@@ -16,6 +15,7 @@ namespace TexCode.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
@@ -35,7 +35,7 @@ namespace TexCode.Controllers
             return Ok(new { message = "Registration successful" });
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -51,7 +51,7 @@ namespace TexCode.Controllers
             return Ok(user);
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPut("{id}")]
         public IActionResult Update(int id, UpdateRequest model)
         {
@@ -59,7 +59,7 @@ namespace TexCode.Controllers
             return Ok(new { message = "User updated successfully" });
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

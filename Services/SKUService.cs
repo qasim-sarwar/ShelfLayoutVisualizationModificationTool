@@ -6,10 +6,10 @@ namespace TexCode.Services
 {
     public interface ISKUService
     {
-        Task CreateSKUAsync(SKU sku);
+        Task<SKU> CreateSKUAsync(SKU sku);
         Task<SKU> GetSKUByJanCodeAsync(string janCode);
         Task<List<SKU>> GetAllSKUsAsync();
-        Task UpdateSKUAsync(SKU updatedSKU);
+        Task<SKU> UpdateSKUAsync(SKU updatedSKU);
         Task DeleteSKUAsync(string janCode);
 
     }
@@ -22,10 +22,11 @@ namespace TexCode.Services
             _context = context;
         }
 
-        public async Task CreateSKUAsync(SKU sku)
+        public async Task<SKU> CreateSKUAsync(SKU sku)
         {
             _context.SKUs.Add(sku);
             await _context.SaveChangesAsync();
+            return sku;
         }
 
         public async Task<SKU> GetSKUByJanCodeAsync(string janCode)
@@ -33,7 +34,7 @@ namespace TexCode.Services
             return await _context.SKUs.FirstOrDefaultAsync(s => s.JanCode == janCode);
         }
 
-        public async Task UpdateSKUAsync(SKU updatedSKU)
+        public async Task<SKU> UpdateSKUAsync(SKU updatedSKU)
         {
             var existingSKU = await _context.SKUs.FirstOrDefaultAsync(s => s.JanCode == updatedSKU.JanCode);
             if (existingSKU != null)
@@ -48,6 +49,7 @@ namespace TexCode.Services
                 existingSKU.Shape = updatedSKU.Shape;
                 await _context.SaveChangesAsync();
             }
+            return updatedSKU;
         }
         public async Task DeleteSKUAsync(string janCode)
         {
