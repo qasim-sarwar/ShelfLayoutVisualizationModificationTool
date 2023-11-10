@@ -108,7 +108,7 @@ namespace TexCode.Services
             account.VerificationToken = generateVerificationToken();
 
             // hash password
-            //account.PasswordHash = BCrypt.HashPassword(model.Password);
+            account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
             // save account
             _context.Accounts.Add(account);
@@ -124,7 +124,7 @@ namespace TexCode.Services
 
             // hash password if it was entered
             if (!string.IsNullOrEmpty(model.Password))
-                //account.PasswordHash = BCrypt.HashPassword(model.Password);
+                account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
                 // copy model to account and save
                 _mapper.Map(model, account);
